@@ -1,0 +1,21 @@
+﻿<form method="post" enctype="multipart/form-data" action="File/Upload">
+    <div>
+        <p>Upload one or more files using this form:</p>
+        <input type="file" name="files" />
+    </div>
+    <div>
+        <input type="submit" value="Upload" />
+    </div>
+</form>
+
+<Editor Content="iiiii"></Editor>
+<PageCom PageInfo=@(new PageInfo {
+                    TotalCount =32, Search = this.Search}) OnPageClick="Search"></PageCom>
+
+@code {
+       public void Search(int pageIndex)
+    {
+        this.P = pageIndex;
+    }
+    public int P { get; set; }
+}

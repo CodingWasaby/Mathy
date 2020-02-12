@@ -1,0 +1,44 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
+@inject MathyAuthenticationStateProvider masp
+
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+        <AuthorizeView>
+            <Authorized>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="javascript:void(0)">欢迎 <strong>@authenticationStateTask.Result.User.Identity.Name</strong> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0)" @onclick="Logout">注销</a>
+                    </li>
+                </ul>
+            </Authorized>
+            <NotAuthorized>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">登录</button>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+    <LoginModal></LoginModal>
+</div>
+@code{
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private async Task Logout()
+    {
+        await LocalStorage.DeleteAsync(JS, "User");
+        await masp.NotifyAuthenticationState();
+    }
+}
+

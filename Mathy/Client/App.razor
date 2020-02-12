@@ -1,0 +1,22 @@
+﻿
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <Authorizing>
+                <div class="text-center">
+                    <div class="spinner-border  text-info" style="width: 5rem; height: 5rem;margin-top:5rem" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <h2 style="margin-top:2rem">正在登录...</h2>
+                </div>
+            </Authorizing>
+        </AuthorizeRouteView>
+    </Found>
+    <NotFound>
+        <CascadingAuthenticationState>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </CascadingAuthenticationState>
+    </NotFound>
+</Router>

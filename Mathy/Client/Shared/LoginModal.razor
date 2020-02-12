@@ -1,0 +1,84 @@
+﻿@inject HttpClient http
+@inject IJSRuntime JS
+@inject MathyAuthenticationStateProvider masp
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><strong> 欢迎使用 UES</strong></h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">邮箱</span>
+                    </div>
+                    <input type="email" class="form-control" placeholder="xxx@example.com" aria-label="Email" aria-describedby="basic-addon1" @bind-value="@User.Email" required>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon2">密码</span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="请输入密码" aria-label="Password" aria-describedby="basic-addon2" @bind-value="@User.Password" required>
+                </div>
+                <Alertinfo @bind-ShowFlag="ShowFlag" @bind-Message="Message"></Alertinfo>
+            </div>
+            <div class="modal-footer">
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <button type="button" class="btn btn-primary" @onclick="LoginSumbit">登录</button>
+                    </NotAuthorized>
+                    <Authorizing>
+                        <button class="btn btn-primary" disabled>
+                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                            登录中...
+                        </button>
+                    </Authorizing>
+                </AuthorizeView>
+                @*<button type="button" class="btn btn-info">注册</button>*@
+                <button id="CloseLoginModal" type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="Cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private User User { get; set; } = new User();
+    private string Message;
+    private bool ShowFlag = false;
+
+    public async Task LoginSumbit()
+    {
+        ShowFlag = false;
+        if (string.IsNullOrEmpty(User.Email) || string.IsNullOrEmpty(User.Password))
+        {
+            ShowFlag = true;
+            Message = "请填写完整信息！";
+            return;
+        }
+        var result = await http.PostJsonAsync<ResponseResult<User>>("User/" + User.Email + "/" + User.Password, null);
+        if (result.Code != 0)
+        {
+            Message = "登录异常，请联系管理员！";
+            ShowFlag = true;
+            return;
+        }
+        else
+        {
+            if (result.Data == null)
+            {
+                Message = "账户名或密码错误，请重试！";
+                ShowFlag = true;
+                return;
+            }
+            await masp.NotifyAuthenticationState(new User { Email = result.Data.Email, Password = result.Data.Password });
+            await JS.InvokeVoidAsync("CloseLoginModal", null);
+        }
+    }
+
+    public void Cancel()
+    {
+        this.User = new User();
+        this.ShowFlag = false;
+    }
+}

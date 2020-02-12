@@ -1,0 +1,17 @@
+﻿@if (ShowFlag)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>@Message</strong>
+    </div>
+}
+@code {
+    [Parameter]
+    public bool ShowFlag { get; set; }
+    [Parameter]
+    public string Message { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ShowFlagChanged { get; set; }
+    [Parameter]
+    public EventCallback<string> MessageChanged { get; set; }
+}

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Cherimoya\**" />
+    <Compile Remove="Dandelion\**" />
+    <EmbeddedResource Remove="Cherimoya\**" />
+    <EmbeddedResource Remove="Dandelion\**" />
+    <None Remove="Cherimoya\**" />
+    <None Remove="Dandelion\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mathy.Repository\Mathy.Repository.csproj" />
+    <ProjectReference Include="..\Mathy\Shared\Mathy.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,46 @@
+﻿<div class="btn-group mr-2" role="group" aria-label="Second group">
+    <button type="button" class="btn btn-@(Left?"secondary":"light")" @onclick="LeftC">
+        <span class="oi oi-arrow-left" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-secondary">@PageInfo.PageIndex</button>
+    <button type="button" class="btn btn-@(Right?"secondary":"light")" @onclick="RightC">
+        <span class="oi oi-arrow-right" aria-hidden="true"></span>
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public PageInfo PageInfo { get; set; }
+    [Parameter]
+    public EventCallback<int> OnPageClick { get; set; }
+
+    public bool Left
+    {
+        get
+        {
+            return PageInfo.PageIndex > 1;
+        }
+    }
+
+    public bool Right
+    {
+        get
+        {
+            return PageInfo.PageIndex < PageInfo.TotalPage;
+        }
+    }
+
+    private void LeftC()
+    {
+        if (Left)
+            OnPageClick.InvokeAsync(PageInfo.PageIndex - 1);
+    }
+
+    private void RightC()
+    {
+        if (Right)
+            OnPageClick.InvokeAsync(PageInfo.PageIndex + 1);
+    }
+}
+
+
