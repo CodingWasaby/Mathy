@@ -20,7 +20,6 @@ namespace Mathy.Client
         {
             this.http = http;
             js = JS;
-            LocalStorage.DeleteAsync(js, "User");
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {

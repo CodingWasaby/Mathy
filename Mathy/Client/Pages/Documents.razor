@@ -1,0 +1,110 @@
+﻿@page "/Documents"
+@using System.Linq;
+@inject HttpClient http
+@inject IJSRuntime JS
+@attribute [Authorize]
+
+<div class="">
+    <nav class="navbar navbar-light bg-light">
+        <form class="form-inline  col-lg-11">
+            <input class="form-control col-lg-6" type="search" placeholder="Search..." aria-label="Search" @oninput="SearchInput">
+            @*<button class="btn btn-outline-success my-2 my-sm-0 site-back" type="submit">Search</button>*@
+        </form>
+    </nav>
+    @foreach (FuncDoc func in Docs)
+    {
+        <div class="card card-margin">
+            <div class="card-header">
+                @func.Name
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@func.Title</h5>
+                <p class="card-text">@func.Description</p>
+                <div class="card">
+                    <div class="card-header">
+                        参数
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-dark" title="参数">
+                            <thead>
+                                <tr>
+                                    <th width="10%">名称</th>
+                                    <th width="30%">类型</th>
+                                    <th width="60%">说明</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (ParameterDoc parameter in func.Parameters)
+                                {
+                                    <tr>
+                                        <td width="10%">@parameter.Name</td>
+                                        <td width="30%">@string.Join("，", parameter.Type)</td>
+                                        <td  width="60%">@parameter.Description</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        返回结果与函数说明
+                    </div>
+                    <div class="card-body">
+                        @foreach (ReturnDoc r in func.Returns)
+                        {
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">@r.Type</span>
+                                </div>
+                                <input type="text" class="form-control" value="@r.Description" readonly>
+                            </div>
+                        }
+                        @if (func.Article != null)
+                        {
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">函数说明：</span>
+                                </div>
+                                <textarea class="form-control" style="height:100px" value="@(func.Article.Memo)" readonly />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<FuncDoc> Docs = new List<FuncDoc>();
+    private List<FuncDoc> _Docs;
+    private bool isNewRow = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await http.GetJsonAsync<ResponseResult<List<FuncDoc>>>("/Document");
+        if (result.Code == 0)
+        {
+            Docs = result.Data;
+            Docs.ForEach(m =>
+            {
+                if (!string.IsNullOrEmpty(m.ArticleStr))
+                    m.Article = Article.Parse(m.ArticleStr);
+            });
+            _Docs = Docs.Where(m => true).ToList();
+        }
+        else
+        {
+            await JS.InvokeVoidAsync("AlertMessage", result.Message);
+        }
+    }
+
+    public void SearchInput(ChangeEventArgs args)
+    {
+        if (args.Value != null)
+            Docs = _Docs.Where(m => m.Name.Contains(args.Value.ToString()) || m.Title.Contains(args.Value.ToString())).ToList();
+        else
+            Docs = _Docs.Where(m => true).ToList();
+    }
+}

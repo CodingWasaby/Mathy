@@ -1,39 +1,76 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<div class="jumbotron shadow-sm" style="padding: 3rem 2rem;">
+    <h3><strong> 不确定度评估分析系统</strong></h3>
+    <p class="lead"> Uncertainty Evaluation System</p>
+    <hr class="my-4">
+    <p><strong>UES 提供方便，快捷，持久化的各种不确定度计算功能。丰富的自定义函数使计算更加简单。</strong></p>
+    <p><strong>你可以自定义实验过程，也可以使用别人已经创建好的实验模板进行实验。</strong></p>
+    <hr class="my-4">
+    <ul class="list-unstyled">
+        <li class="media my-4">
+            <img src="/favicon.ico" class="mr-3" alt="...">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1">
+                    <strong>普通线性回归</strong>
+                </h5>
+                一元线性回归分析预测法，是根据自变量x和因变量Y的相关关系，建立x与Y的线性回归方程进行预测的方法。
+            </div>
+        </li>
+        <li class="media my-4">
+            <img src="/favicon.ico" class="mr-3" alt="...">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1"><strong>单因素方差分析</strong></h5>
+                对单因素试验数据进行分析，检验方差相等的多个正态总体均值是否相等，进而判断各因素对试验指标的影响是否显著。
+            </div>
+        </li>
+        <li class="media my-4">
+            <img src="/favicon.ico" class="mr-3" alt="...">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1"><strong>正态分布检验</strong></h5>
+                若随机变量X服从一个数学期望为μ、方差为σ^2的正态分布，记为N(μ，σ^2)。其概率密度函数为正态分布的期望值μ决定了其位置，其标准差σ决定了分布的幅度。当μ = 0,σ = 1时的正态分布是标准正态分布。.
+            </div>
+        </li>
+        <li class="media my-4">
+            <img src="/favicon.ico" class="mr-3" alt="...">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1"><strong>方差齐性检验</strong></h5>
+                先对总体的特征作出某种假设，然后通过抽样研究的统计推理，对此假设应该被拒绝还是接受作出推断。
+            </div>
+        </li>
+        <li class="media my-4">
+            <img src="/favicon.ico" class="mr-3" alt="...">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1"><strong>平均值一致性检验</strong></h5>
+                确定在一定显著性水平下各平均值或各方差之间是否有显著性差异，若无显著性差异，则各'f`均值或各方差是一致的，此称为一致性检验.
+            </div>
+        </li>
+        <li class="media my-4">
+            <img src="/favicon.ico" class="mr-3" alt="...">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1"><strong>可疑值剔除</strong></h5>
+                对测定值或测量值进行统计检验，判断所测数据是否来自同一总体，是否存在应剔除的离群值。
+            </div>
+        </li>
+        <li class="media my-4">
+            <img src="/favicon.ico" class="mr-3" alt="...">
+            <div class="media-body">
+                <h5 class="mt-0 mb-1"><strong>科克伦检验</strong></h5>
+                一种等方差性检验。应用于所有标准差都是在重复性条件下，且由相同数目（n）的测试结果计算得出的情形。
+            </div>
+        </li>
+    </ul>
+    <AuthorizeView>
+        <Authorized>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
-<marquee direction="up" scrolldelay="200" style="text-align:center;font-size:20pt;font-weight:bold; margin-left: -60px;width:400px;height:50px">
-    <p>
-        普通线性回归
-    </p>
-    <p>
-        单因素方差分析
-    </p>
-    <p>
-        正态分布检验
-    </p>
-    <p>
-        方差齐性检验
-    </p>
-    <p>
-        平均值一致性检验
-    </p>
-    <p>
-        可疑值剔除
-    </p>
-    <p>
-        科克伦检验
-    </p>
-</marquee>
-
+        </Authorized>
+        <NotAuthorized>
+            <button class="btn btn-primary btn-lg text-center site-back" href="javascript:viod(0)" type="button" data-toggle="modal" data-target="#exampleModal">
+                <span class="oi oi-person" aria-hidden="true" style="margin-right:8px"></span>登录开启更多功能
+            </button>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
 @code{
 
-    public void Search(int pageIndex)
-    {
-        this.P = pageIndex;
-    }
-    public int P { get; set; }
 }

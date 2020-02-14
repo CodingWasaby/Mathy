@@ -1,0 +1,9 @@
+﻿输入的两行矩阵表示点对序列。例如
+[1,2,3,4,5,6;10,20,30,40,50,60]
+表示(1,10)，(2,20)，(3,30)，(4,40)，(5,50)，(6,60)等点。
+
+简单线性回归即对一组点求一条直线y=ax+b。
+@{ex}
+#{a, b}=slreg(@[1,2,3,4,5,6;10,20,30,40,50,60])
+
+对简单线性回归的进一步描述，可参见<a href="https://en.wikipedia.org/wiki/Simple_linear_regression">https://en.wikipedia.org/wiki/Simple_linear_regression</a>。

@@ -1,0 +1,3 @@
+﻿@{ex}
+@ p=len("abcdef")
+@ s="abcdef";p=len(s)

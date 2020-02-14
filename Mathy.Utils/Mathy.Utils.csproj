@@ -5,17 +5,31 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Cherimoya\**" />
-    <Compile Remove="Dandelion\**" />
-    <EmbeddedResource Remove="Cherimoya\**" />
-    <EmbeddedResource Remove="Dandelion\**" />
-    <None Remove="Cherimoya\**" />
-    <None Remove="Dandelion\**" />
+    <Compile Remove="Roselle\**" />
+    <EmbeddedResource Remove="Roselle\**" />
+    <None Remove="Roselle\**" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mathy.Repository\Mathy.Repository.csproj" />
     <ProjectReference Include="..\Mathy\Shared\Mathy.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dandelion\Finance\" />
+    <Folder Include="Dandelion\Hash\" />
+    <Folder Include="Dandelion\IO\" />
+    <Folder Include="Dandelion\Reflection\" />
+    <Folder Include="Dandelion\Serialization\" />
+    <Folder Include="Dandelion\Text\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.10.0" />
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
+    <PackageReference Include="MathNet.Numerics" Version="4.9.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

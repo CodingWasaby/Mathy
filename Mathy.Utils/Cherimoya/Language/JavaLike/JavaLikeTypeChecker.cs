@@ -1,7 +1,7 @@
 ﻿using Cherimoya.Evaluation;
 using Cherimoya.Expressions;
+using Mathy.Utils.Cherimoya;
 using Mathy.Utils.Dandelion;
-using Mathy.DAL;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -464,15 +464,12 @@ namespace Cherimoya.Language.JavaLike
             }
             e.Method = context.VariableContext.SearchMethod(e.MethodName, null, parameterClasses);
 
-
-
             if (e.Method == null)
             {
-                var dal = new CoefficientDAL();
-                var coeList = dal.GetCoefficientDetail(e.MethodName);
-                if (coeList.Count > 0)
+                var coe = LocalRepo.Coefficients.FirstOrDefault(m => m.CoefficientName == e.MethodName);
+                if (coe != null)
                 {
-                    context.VariableContext.Set(e.MethodName, coeList);
+                    context.VariableContext.Set(e.MethodName, LocalRepo.CoefficientDetails.Where(m => m.CoefficientID == coe.CoefficientID).ToList());
                     e.Method = this.GetType().GetMethods()[0]; //模拟一个方法
                     e.IsCustomFunc = true;
                 }

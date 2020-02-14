@@ -23,3 +23,12 @@ function InitEditor(content) {
 function CloseLoginModal() {
     $("#CloseLoginModal").click();
 }
+
+function AlertMessage(msg) {
+    $('#alertMessage').text(msg);
+    $('#alertModel').modal('show');
+}
+
+function QuikStartClick() {
+    $("#QuikStart").click();
+}

@@ -1,0 +1,6 @@
+﻿@{ex}
+如果
+@ p=reverse("abcdef")
+则p="fedcba"。
+@{ex}
+@ s="abcdef";p=len(s)

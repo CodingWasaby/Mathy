@@ -1,8 +1,8 @@
 using Cherimoya.Evaluation;
 using Cherimoya.Expressions;
-using Mathy.DAL;
 using Mathy.Repository.Repo;
 using Mathy.Shared.Entity;
+using Mathy.Utils.Cherimoya;
 using Mathy.Utils.Dandelion;
 using System;
 using System.Collections.Generic;
@@ -265,8 +265,12 @@ namespace Cherimoya.Language.JavaLike
                 }
                 else
                 {
-                    var dal = new CoefficientRepo();
-                    data = dal.GetCoefficientDetail(expression.MethodName);
+                    data = new List<CoefficientDetail>();
+                    var coe = LocalRepo.Coefficients.FirstOrDefault(m => m.CoefficientName == expression.MethodName);
+                    if (coe != null)
+                    {
+                        data = LocalRepo.CoefficientDetails.Where(m => m.CoefficientID == coe.CoefficientID).ToList();
+                    }
                 }
                 var colName = Evaluate(expression.Parameters[0], context).ToString();
                 var rowIndex = (int)Evaluate(expression.Parameters[1], context);

@@ -26,8 +26,10 @@ namespace Mathy.Repository
             }
             else
             {
-                using var conn = _DbBase.GetDbConnection();
-                return conn.Query<T>(sql, param).AsList();
+                using (var conn = _DbBase.GetDbConnection())
+                {
+                    return conn.Query<T>(sql, param).AsList();
+                }
             }
         }
 
@@ -44,8 +46,10 @@ namespace Mathy.Repository
             }
             else
             {
-                using var conn = _DbBase.GetDbConnection();
-                return conn.Execute(sql, param, transaction) >= 0;
+                using (var conn = _DbBase.GetDbConnection())
+                {
+                    return conn.Execute(sql, param, transaction) >= 0;
+                }
             }
         }
 
@@ -57,35 +61,39 @@ namespace Mathy.Repository
             }
             else
             {
-                using var conn = _DbBase.GetDbConnection();
-                return conn.ExecuteScalar<int>(sql, param, transaction);
+                using (var conn = _DbBase.GetDbConnection())
+                {
+                    return conn.ExecuteScalar<int>(sql, param, transaction);
+                }
             }
         }
 
         protected virtual bool BulkToDB<T>(List<T> entitys, string tableName, SqlTransaction tran = null)
         {
             DataTable dt = GetTable(entitys);
-            using var conn = _DbBase.GetDbConnection(false);
-            SqlBulkCopy bulkCopy;
-            if (tran != null)
+            using (var conn = _DbBase.GetDbConnection(false))
             {
-                bulkCopy = new SqlBulkCopy(tran.Connection, SqlBulkCopyOptions.Default, tran);
-            }
-            else
-            {
-                bulkCopy = new SqlBulkCopy(conn);
-            }
-            bulkCopy.DestinationTableName = tableName;
-            bulkCopy.BatchSize = dt.Rows.Count;
-            try
-            {
-                if (dt != null && dt.Rows.Count != 0)
-                    bulkCopy.WriteToServer(dt);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                SqlBulkCopy bulkCopy;
+                if (tran != null)
+                {
+                    bulkCopy = new SqlBulkCopy(tran.Connection, SqlBulkCopyOptions.Default, tran);
+                }
+                else
+                {
+                    bulkCopy = new SqlBulkCopy(conn);
+                }
+                bulkCopy.DestinationTableName = tableName;
+                bulkCopy.BatchSize = dt.Rows.Count;
+                try
+                {
+                    if (dt != null && dt.Rows.Count != 0)
+                        bulkCopy.WriteToServer(dt);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
 
@@ -101,14 +109,16 @@ namespace Mathy.Repository
             var sqlPage = sql + " Order By " + pageInfo.OrderField + " " + pageInfo.DescStr;
             sqlPage += " OFFSET " + pageInfo.OffSet + " ROWS FETCH NEXT " + pageInfo.PageSize + " ROWS ONLY";
 
-            using var conn = _DbBase.GetDbConnection();
-            var page = new PageList<T>
+            using (var conn = _DbBase.GetDbConnection())
             {
-                PageData = Query<T>(sqlPage, param)
-            };
-            pageInfo.TotalCount = conn.QueryFirst<int>(sqlCount, param);
-            page.PageInfo = pageInfo;
-            return page;
+                var page = new PageList<T>
+                {
+                    PageData = Query<T>(sqlPage, param)
+                };
+                pageInfo.TotalCount = conn.QueryFirst<int>(sqlCount, param);
+                page.PageInfo = pageInfo;
+                return page;
+            }
         }
 
         private DataTable GetTable<T>(IEnumerable<T> entitys)
