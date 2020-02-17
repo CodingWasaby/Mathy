@@ -25,7 +25,7 @@ namespace Mathy.Server
                 //.UseConfiguration(new ConfigurationBuilder()
                 //    .AddCommandLine(args)
                 //    .Build())
-                .UseUrls("http://*:8081")
+                .UseUrls("http://*:8080")
                 .UseStartup<Startup>()            
                 .Build();
     }

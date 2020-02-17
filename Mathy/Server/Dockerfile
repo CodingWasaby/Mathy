@@ -1,4 +1,4 @@
-FROM mydotnet:latest
+FROM dotnet_bitmap_image:latest
 WORKDIR /app
 EXPOSE 8080
 COPY  .  .
