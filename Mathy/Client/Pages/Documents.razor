@@ -1,7 +1,6 @@
 ﻿@page "/Documents"
-@using System.Linq;
 @inject HttpClient http
-@inject IJSRuntime JS
+@inject JShelper JS
 @attribute [Authorize]
 
 <div class="">
@@ -39,7 +38,7 @@
                                     <tr>
                                         <td width="10%">@parameter.Name</td>
                                         <td width="30%">@string.Join("，", parameter.Type)</td>
-                                        <td  width="60%">@parameter.Description</td>
+                                        <td width="60%">@parameter.Description</td>
                                     </tr>
                                 }
                             </tbody>
@@ -55,7 +54,10 @@
                         {
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">@r.Type</span>
+                                    <span class="input-group-text">返回结果</span>
+                                </div>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">@string.Join("，", r.Type)</span>
                                 </div>
                                 <input type="text" class="form-control" value="@r.Description" readonly>
                             </div>
@@ -64,7 +66,7 @@
                         {
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">函数说明：</span>
+                                    <span class="input-group-text">函数说明</span>
                                 </div>
                                 <textarea class="form-control" style="height:100px" value="@(func.Article.Memo)" readonly />
                             </div>
@@ -96,7 +98,7 @@
         }
         else
         {
-            await JS.InvokeVoidAsync("AlertMessage", result.Message);
+            await JS.Alert(result.Message);
         }
     }
 

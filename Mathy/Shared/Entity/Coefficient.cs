@@ -10,7 +10,7 @@ namespace Mathy.Shared.Entity
         public string CoefficientContent { get; set; }
         public int DeleteFlag { get; set; }
         public string Creator { get; set; }
-        public string CreateTime { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 
     [Serializable]

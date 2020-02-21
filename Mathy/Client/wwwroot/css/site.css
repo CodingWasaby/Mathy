@@ -198,3 +198,11 @@ app {
 .card-margin {
     margin-top: 1rem;
 }
+
+.custom-file-input:lang(zh) ~ .custom-file-label::after {
+    content: "浏览文件";
+}
+
+.custom-file-label::after {
+    content: "浏览文件";
+}

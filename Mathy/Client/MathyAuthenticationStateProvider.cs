@@ -15,15 +15,15 @@ namespace Mathy.Client
     public class MathyAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly HttpClient http;
-        private readonly IJSRuntime js;
-        public MathyAuthenticationStateProvider(HttpClient http, IJSRuntime JS)
+        private readonly LocalStorage localStorage;
+        public MathyAuthenticationStateProvider(HttpClient http, LocalStorage localStorage)
         {
             this.http = http;
-            js = JS;
+            this.localStorage = localStorage;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var user = await LocalStorage.GetAsync<User>(js, "User");
+            var user = await localStorage.GetAsync<User>("User");
             if (user == null)
             {
                 var identity = new ClaimsIdentity();
@@ -33,9 +33,10 @@ namespace Mathy.Client
             else
             {
                 var result = await http.PostJsonAsync<ResponseResult<User>>("User/" + user.Email + "/" + user.Password, null);
-                await LocalStorage.SetAsync(js, "User", result.Data);
+                await localStorage.SetAsync("User", result.Data);
                 var identity = result.Code == 0 ? new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, result.Data.Name) }, "all") : new ClaimsIdentity();
                 var cp = new ClaimsPrincipal(identity);
+                http.DefaultRequestHeaders.Add("UesToken", "test");
                 return new AuthenticationState(cp);
             }
         }
@@ -43,9 +44,9 @@ namespace Mathy.Client
         public async Task NotifyAuthenticationState(User user = null)
         {
             if (user == null)
-                await LocalStorage.DeleteAsync(js, "User");
+                await localStorage.DeleteAsync("User");
             else
-                await LocalStorage.SetAsync(js, "User", user);
+                await localStorage.SetAsync("User", user);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
     }

@@ -1,0 +1,67 @@
+﻿<div class="container-fluid">
+    <div class="row">
+        @if (Search.DatePart)
+        {
+            <div class="col input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">开始时间</span>
+                </div>
+                <input type="date" class="form-control" aria-describedby="basic-addon1" @bind="Search.BaseS.BeginDate">
+            </div>
+            <div class="col input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">结束时间</span>
+                </div>
+                <input type="date" class="form-control" aria-describedby="basic-addon1" @bind="Search.BaseS.EndDate">
+            </div>
+        }
+        @foreach (var n in Search.SearchParams)
+        {
+            <div class="col input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">@n.Name</span>
+                </div>
+                <input id="@n.Key" type="text" class="form-control" @bind="n.Value">
+            </div>
+        }
+        <div class="col">
+            <button type="button" class="btn btn-primary site-back" @onclick="SearchClick">查询</button>
+            @if (Search.CustomButton)
+            {
+                <button type="button" class="btn btn-primary site-back" @onclick="CustomButtonClick">新增</button>
+            }
+        </div>
+    </div>
+</div>
+@if (Search.PagePart)
+{
+    <PageBar @bind-PageInfo="Search.BaseS.Page"></PageBar>
+}
+
+@code {
+    [Parameter]
+    public CommonSearch Search { get; set; }
+    [Parameter]
+    public EventCallback<CommonSearch> SearchChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<CommonSearch> OnSearchClick { get; set; }
+    [Parameter]
+    public EventCallback OnCustomButtonClick { get; set; }
+
+    public async Task PageClick(int pageIndex)
+    {
+        Search.BaseS.Page.PageIndex = pageIndex;
+        await OnSearchClick.InvokeAsync(Search);
+    }
+
+    public async Task SearchClick()
+    {
+        await OnSearchClick.InvokeAsync(Search);
+    }
+
+    public async Task CustomButtonClick()
+    {
+        await OnCustomButtonClick.InvokeAsync(null);
+    }
+}

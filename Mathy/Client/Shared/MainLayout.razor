@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
-@inject IJSRuntime JS
 @inject MathyAuthenticationStateProvider masp
+@inject LocalStorage localStorage
 
 
 <div class="sidebar">
@@ -39,7 +39,7 @@
 
     private async Task Logout()
     {
-        await LocalStorage.DeleteAsync(JS, "User");
+        await localStorage.DeleteAsync("User");
         await masp.NotifyAuthenticationState();
     }
 }

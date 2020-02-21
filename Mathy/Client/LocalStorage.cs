@@ -7,15 +7,20 @@ using System.Threading.Tasks;
 
 namespace Mathy.Client
 {
-    public static class LocalStorage
+    public class LocalStorage
     {
-        public static ValueTask<T> GetAsync<T>(IJSRuntime jsRuntime, string key)
+        private IJSRuntime jsRuntime;
+        public LocalStorage(IJSRuntime js)
+        {
+            jsRuntime = js;
+        }
+        public ValueTask<T> GetAsync<T>(string key)
            => jsRuntime.InvokeAsync<T>("blazorLocalStorage.get", key);
 
-        public static ValueTask SetAsync(IJSRuntime jsRuntime, string key, object value)
+        public ValueTask SetAsync(string key, object value)
             => jsRuntime.InvokeVoidAsync("blazorLocalStorage.set", key, value);
 
-        public static ValueTask DeleteAsync(IJSRuntime jsRuntime, string key)
+        public ValueTask DeleteAsync(string key)
             => jsRuntime.InvokeVoidAsync("blazorLocalStorage.delete", key);
     }
 }

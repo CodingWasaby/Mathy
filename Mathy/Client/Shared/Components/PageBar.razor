@@ -1,8 +1,8 @@
-﻿<div class="btn-group mr-2" role="group" aria-label="Second group">
+﻿<div class="btn-group mr-2" role="group" aria-label="Second group float-right" >
     <button type="button" class="btn btn-@(Left?"secondary":"light")" @onclick="LeftC">
         <span class="oi oi-arrow-left" aria-hidden="true"></span>
     </button>
-    <button type="button" class="btn btn-secondary">@PageInfo.PageIndex</button>
+    @*<button type="button" class="btn btn-secondary">@PageInfo.PageIndex</button>*@
     <button type="button" class="btn btn-@(Right?"secondary":"light")" @onclick="RightC">
         <span class="oi oi-arrow-right" aria-hidden="true"></span>
     </button>
@@ -13,6 +13,8 @@
     public PageInfo PageInfo { get; set; }
     [Parameter]
     public EventCallback<int> OnPageClick { get; set; }
+    [Parameter]
+    public EventCallback<PageInfo> PageInfoChanged { get; set; }
 
     public bool Left
     {

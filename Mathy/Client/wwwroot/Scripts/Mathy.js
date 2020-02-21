@@ -12,7 +12,7 @@ function InitEditor(content) {
     editor.customConfig.uploadImgMaxSize = 5 * 1024 * 1024;
     editor.customConfig.uploadImgShowBase64 = true;
     editor.customConfig.uploadImgServer = 'File/Upload';
-    editor.create();    
+    editor.create();
     try {
         editor.txt.html(content);
     } catch (e) {
@@ -20,15 +20,19 @@ function InitEditor(content) {
     }
 }
 
-function CloseLoginModal() {
-    $("#CloseLoginModal").click();
-}
-
 function AlertMessage(msg) {
     $('#alertMessage').text(msg);
     $('#alertModel').modal('show');
 }
 
-function QuikStartClick() {
-    $("#QuikStart").click();
+function ClickButton(id) {
+    $("#" + id).click();
+}
+
+function ClearContent(id) {
+    $("#" + id).html("");
+}
+
+function showFilename(file) {
+    $("#filename_label").html(file.name);
 }

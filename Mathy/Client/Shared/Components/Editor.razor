@@ -1,4 +1,4 @@
-﻿@inject IJSRuntime JS
+﻿@inject JShelper JS
 
 <div id="div1">
 
@@ -10,9 +10,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await  JS.InvokeVoidAsync("InitEditor", Content);
-        }
+        await JS.ClearContent("div1");
+        await JS.InitEditor(Content);
     }
 }

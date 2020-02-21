@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Mathy.Shared.Search
 {
-    public abstract class BaseSearch
+    public  class BaseSearch
     {
         public DateTime? BeginDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public PageInfo Page { get; set; }
+        public PageInfo Page { get; set; } = new PageInfo();
     }
 }

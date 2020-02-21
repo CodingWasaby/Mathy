@@ -1,0 +1,150 @@
+﻿@inject HttpClient http
+@inject JShelper JS
+
+<button id="coemodal" type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl" hidden></button>
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">系数表</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="firstName">名称：</label>
+                                <input type="text" class="form-control" aria-describedby="basic-addon1" @bind-value="@ViewCoe.CoefficientName" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="firstName">说明：</label>
+                            <Editor Content="@ViewCoe.CoefficientContent">
+                            </Editor>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    @if (!ReadOnly)
+                    {
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="input-group mb-3" style="cursor:pointer">
+                                    <div class="custom-file">
+                                        <input type="file" @onchange="FileChange" class="custom-file-input" id="customFile1">
+                                        <label id="filename_label" class="custom-file-label" for="customFile1">@FileName</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="inputGroupFileAddon02">清空列表</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (ViewCoeDetails.Any())
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table table-dark" title="参数">
+                                    <thead>
+                                        <tr>
+                                            @foreach (var n in ViewCoeDetails.OrderBy(m => m.CoefficientDetailIndex).ToLookup(m => m.CoefficientDetailName))
+                                            {
+                                                <th class="text-center">@n.Key</th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var n in ViewCoeDetails.OrderBy(m => m.CoefficientDetailRow).ToLookup(m => m.CoefficientDetailRow))
+                                        {
+                                            <tr>
+                                                @foreach (var d in n.OrderBy(m => m.CoefficientDetailIndex))
+                                                {
+                                                    <td class="text-center">
+                                                        @d.CoefficientDetailValue
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </form>
+            </div>
+            <div class="modal-footer">
+                @if (!ReadOnly)
+                {
+                    @if (Loading)
+                    {
+                        <button class="btn btn-primary site-back" disabled>
+                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                            正在保存...
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-secondary site-back" @onclick="SaveToDB">保存</button>
+                    }
+                    <button type="button" class="btn btn-secondary site-back" data-dismiss="modal">取消</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Coefficient ViewCoe { get; set; }
+    [Parameter]
+    public bool ReadOnly { get; set; }
+
+    public List<CoefficientDetail> ViewCoeDetails = new List<CoefficientDetail>();
+    private bool Loading = false;
+    private string FileName = "上传系数表";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ViewCoeDetails = new List<CoefficientDetail>();
+        if (ViewCoe.CoefficientID > 0)
+        {
+            var result = await http.PostJsonAsync<ResponseResult<List<CoefficientDetail>>>("/Coefficient/Details/" + ViewCoe.CoefficientID, null);
+            ViewCoeDetails = result.Data;
+        }
+        FileName = "上传系数表";
+    }
+
+
+
+    private void FileChange(ChangeEventArgs args)
+    {
+        JS.Log(args);
+        FileName = args.Value.ToString().Split('\\').Last();
+        //var file = new FileStream(args.Value.ToString(), FileMode.Open);
+        //while (file.CanRead)
+        //    JS.InvokeVoidAsync("console.log", file.ReadByte());
+
+    }
+
+    private void SaveToDB()
+    {
+        try
+        {
+            Loading = true;
+        }
+        catch (Exception ex)
+        {
+
+            return;
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
+}

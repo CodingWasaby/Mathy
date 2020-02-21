@@ -1,6 +1,7 @@
 ﻿@inject HttpClient http
-@inject IJSRuntime JS
+@inject JShelper JS
 @inject MathyAuthenticationStateProvider masp
+@inject NavigationManager navi
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog" role="document">
@@ -79,8 +80,9 @@
                     return;
                 }
                 await masp.NotifyAuthenticationState(new User { Email = result.Data.Email, Password = result.Data.Password });
-                await JS.InvokeVoidAsync("CloseLoginModal", null);
-                await JS.InvokeVoidAsync("QuikStartClick", null);
+                await JS.ClickButton("CloseLoginModal");
+                navi.NavigateTo("/QuikStart");
+                //await JS.InvokeVoidAsync("QuikStartClick", null);
             }
         }
         catch (Exception ex)
@@ -97,6 +99,7 @@
 
     public void Cancel()
     {
+
         this.ShowFlag = false;
     }
 }

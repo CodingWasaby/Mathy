@@ -16,13 +16,13 @@ namespace Mathy.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.Services.AddOptions();
-            //builder.Services.AddScoped(s => new AuthorizeRouteView());
-            //builder.Services.AddScoped(s => new CascadingAuthenticationState());
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<MathyAuthenticationStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<MathyAuthenticationStateProvider>());
 
-            //builder.Services.AddScoped<LocalStorage>();
+            builder.Services.AddScoped<LocalStorage>();
+            builder.Services.AddScoped<JShelper>();
+
             builder.RootComponents.Add<App>("app");
 
             await builder.Build().RunAsync();

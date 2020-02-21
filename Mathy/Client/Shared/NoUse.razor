@@ -9,8 +9,8 @@
 </form>
 
 <Editor Content="iiiii"></Editor>
-<PageCom PageInfo=@(new PageInfo {
-                    TotalCount =32, Search = this.Search}) OnPageClick="Search"></PageCom>
+<PageBar PageInfo=@(new PageInfo {
+                    TotalCount =32, Search = this.Search}) OnPageClick="Search"></PageBar>
 
 @code {
        public void Search(int pageIndex)

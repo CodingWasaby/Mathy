@@ -1,0 +1,104 @@
+﻿@page  "/CoefficientList"
+@inject HttpClient http
+@inject JShelper JS
+@attribute [Authorize]
+
+<SearchBar @bind-Search="CoeSearch" OnSearchClick="GetPage" OnCustomButtonClick="AddRow"></SearchBar>
+
+<div class="album py-lg-2 bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            @if (PageList != null && PageList.PageData != null)
+            {
+                @foreach (var coe in PageList.PageData)
+                {
+                    <div class="col-lg-11">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header">
+                                @coe.CoefficientName
+                                <span class="badge badge-secondary">@coe.Creator</span>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">@(new MarkupString(coe.CoefficientContent))</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(()=>ViewRow(coe))">查看</button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="@(()=>EditRow(coe))">编辑</button>
+                                    </div>
+                                    <small class="text-muted">@coe.CreateTime.ToShortDateString()</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<CoefficientEditor ViewCoe="ViewCoe" ReadOnly="ReadOnly"></CoefficientEditor>
+@code {
+    public CommonSearch CoeSearch;
+    private PageList<Coefficient> PageList;
+    private Coefficient ViewCoe = new Coefficient();
+    private bool ReadOnly = false;
+
+    public async Task GetPage(CommonSearch search)
+    {
+        var result = await http.PostJsonAsync<ResponseResult<PageList<Mathy.Shared.Entity.Coefficient>>>("/Coefficient/List", new CoefficientSearch
+        {
+            Name = search.SearchParams.First(m => m.Key == "CoeName").Value,
+            Page = search.BaseS.Page
+        });
+        if (result.Code != 0)
+        {
+            await JS.Alert(result.Message);
+        }
+        else
+        {
+            PageList = result.Data;
+            CoeSearch.BaseS.Page = PageList.PageInfo;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CoeSearch = new CommonSearch();
+        CoeSearch.DatePart = false;
+        CoeSearch.SearchParams.Add(new SearchParam
+        {
+            Key = "CoeName",
+            Name = "系数表名称"
+        });
+        await GetPage(CoeSearch);
+    }
+
+    private async Task EditRow(Coefficient coe)
+    {
+        ReadOnly = false;
+        await ShowRow(coe);
+    }
+
+    private async Task ViewRow(Coefficient coe)
+    {
+        ReadOnly = true;
+        await ShowRow(coe);
+    }
+
+    private async Task ShowRow(Coefficient coe)
+    {
+        ViewCoe = coe;
+        await ShowEditModal();
+    }
+
+    private async Task AddRow()
+    {
+        ReadOnly = false;
+        ViewCoe = new Coefficient();
+        await ShowEditModal();
+    }
+
+    private async Task ShowEditModal()
+    {
+        await JS.ClickButton("coemodal");
+    }
+}
